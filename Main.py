@@ -17,7 +17,7 @@ def parse(filename):
 
     layout = [[] for _ in range(rows)]
     for (i, line) in enumerate(lines[1:]):
-        layout[i] = list(map(lambda x:x, line[:-1]))
+        layout[i] = list(line[:-1])
 
     return Pizza(rows, columns, L, H, layout)
 
@@ -40,5 +40,11 @@ def slicesToOutput(slices):
     f.close()
 
 
+# format slices: [((r_11,c_11), (r_12,c_12)), ((r_21,c_21), (r_22,c_22)), ...]
+def topDownSlicing(pizza):
+    for i in range(pizza.columns):
+        if sensible(pizza, i):
+            pass
 
-
+def sensible(pizza, index):
+    pass
