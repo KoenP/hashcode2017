@@ -172,11 +172,43 @@ def bigSlices(pizza):
         print(cuts)
     return cuts
 
+def isGoodSlice(pizza):
+    return pizza.row * pizza.column <= pizza.H
+
 # format slices: [((r_11,c_11), (r_12,c_12)), ((r_21,c_21), (r_22,c_22)), ...]
 def topDownSlicing(pizza):
-    for i in range(pizza.column-1):
-        if sensible(pizza, i):
-            print(cost(pizza, i))
+
+    if isGoodSlice(pizza):
+        return [((0,0), (pizza.row-1, pizza.column-1))]
+
+    transpose = pizza.row > pizza.column
+
+    if transpose:
+        pizza.grid = transpose_grid(pizza.grid)
+
+    sensibles = [(i, cost(pizza, i)) for i in range(pizza.column - 1) if sensible(pizza, i)]
+    min_col = min(sensibles, key=lambda t: t[1])
+
+    layout1 = [line[:min_col[0]] for line in pizza.grid]
+    layout2 = [line[min_col[0]+1:] for line in pizza.grid]
+
+    new_pizza1 = Pizza(pizza.row, min_col[0], pizza.L, pizza.H, layout1)
+    new_pizza2 = Pizza(pizza.row, pizza.column - min_col[0], pizza.L, pizza.H, layout2)
+
+    result1 = topDownSlicing(new_pizza1)
+    result2 = topDownSlicing(new_pizza2)
+
+    detranspose = lambda slice: ((slice[0][1], slice[0][0]), (slice[1][1], slice[1][0]))
+
+    if transpose:
+        result1 = list(map(detranspose, result1))
+        result2 = list(map(detranspose, result2))
+
+    return result1 + result2
+
+def transpose_grid(grid):
+    return [[row[i] for row in grid] for i in range(len(grid[0]))]
+
 
 # TODO: performance is garbage
 def sensible(pizza, index):
@@ -189,7 +221,7 @@ def cost(pizza, index):
     ratio = T/M
     tomatos1, mushrooms1 = pizza.toppingsInSlice((0, 0), (pizza.row-1, index))
     tomatos2, mushrooms2 = pizza.toppingsInSlice((0, index+1), (pizza.row-1, pizza.column-1))
-    print(T, M, ratio, tomatos1/mushrooms1, tomatos2/mushrooms2)
+    # print(T, M, ratio, tomatos1/mushrooms1, tomatos2/mushrooms2)
     return abs(ratio - tomatos1/mushrooms1) + abs(ratio - tomatos2/mushrooms2)
 
 def main(argv):
