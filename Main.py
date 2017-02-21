@@ -13,11 +13,16 @@ def parse(filename):
 
 # format slices: [((r_11,c_11), (r_12,c_12)), ((r_21,c_21), (r_22,c_22)), ...]
 # returns the points for the slices
-def evaluateSlices(pizza, slices):
-    pass
+def evaluateSlices(slices):
+    points = 0
+    for s in slices:
+        points += abs(s[1][0] - s[0][0]) * abs(s[1][1] - s[0][1])
+    return points
 
 # various algs
 
 # Encodes slices to output format (same format as above)
 def slicesToOutput(slices):
     pass
+
+
