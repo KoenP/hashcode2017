@@ -10,7 +10,7 @@ class Pizza:
     # co1 is coordinate 1
     # co2 is coordinate 2
     # returns the amount of tomatos and mushrooms in a cut in the form of a tupple
-    def toppingsInCut(self, co1, co2):
+    def toppingsInSlice(self, co1, co2):
         tomatos = 0
         mushrooms = 0
         start_r = min(co1[0], co2[0])
@@ -25,6 +25,15 @@ class Pizza:
                     mushrooms += 1
 
         return (tomatos, mushrooms)
+
+    def coordInSlices(self, coord, slices):
+        for s in slices:
+            co1 = s[0]
+            co2 = s[1]
+            if coord[0] >= min(co1[0], co2[0]) and coord[0] <= max(co1[0], co2[0]) \
+                and coord[1] >= min(co1[1], co2[1]) and coord[1] <= max(co1[1], co2[1]):
+                return True
+        return False
 
 # Returns a pizza
 def parse(filename):
@@ -58,7 +67,10 @@ def slicesToOutput(slices):
         f.write("{} {} {} {}\n".format(s[0][0], s[0][1], s[1][0], s[1][1]))
     f.close()
 
-def bigCuts(pizzas):
+def growSlice(pizza, currentSlices):
+
+
+def bigCuts(pizza):
     #We do only cuts according to the size H
     cuts = []
 
