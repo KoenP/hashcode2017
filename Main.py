@@ -23,6 +23,12 @@ def evaluateSlices(slices):
 
 # Encodes slices to output format (same format as above)
 def slicesToOutput(slices):
-    pass
+    f = open('output.txt', 'w')
+    f.write(len(slices))
+    for s in slices:
+        f.write("{} {} {} {}\n".format(s[0][0], s[0][1], s[1][0], s[1][1]))
+    f.close()
+
+
 
 
