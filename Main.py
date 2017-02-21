@@ -1,6 +1,6 @@
 class Pizza:
 
-    def __init__(row, column, L, H, layout):
+    def __init__(self, row, column, L, H, layout):
         self.row = row
         self.column = column
         self.L = L
