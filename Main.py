@@ -15,9 +15,9 @@ class Pizza:
         mushrooms = 0
         start_r = min(co1[0], co2[0])
         start_c = min(co1[1], co2[1])
-        for r in range(abs(co1[0] - co2[0])):
+        for r in range(abs(co1[0] - co2[0]) + 1):
             curr_r = start_r + r
-            for c in range(abs(co1[1] - co2[1])):
+            for c in range(abs(co1[1] - co2[1]) + 1):
                 curr_c = start_c + c
                 if self.grid[curr_r][curr_c] == "T":
                     tomatos += 1
@@ -68,7 +68,7 @@ def slicesToOutput(slices):
     f.close()
 
 def growSlice(pizza, currentSlices):
-    pass
+
 
 def bigCuts(pizza):
     #We do only cuts according to the size H
