@@ -77,11 +77,20 @@ def bigCuts(pizza):
 
 # format slices: [((r_11,c_11), (r_12,c_12)), ((r_21,c_21), (r_22,c_22)), ...]
 def topDownSlicing(pizza):
-    for i in range(pizza.columns):
+    for i in range(pizza.column-1):
         if sensible(pizza, i):
-            pass
+            print(cost(pizza, i))
 
+# TODO: performance is garbage
 def sensible(pizza, index):
-    tomatos1, mushrooms1 = pizza.toppingsInCut((0, 0), (index, pizza.column))
-    tomatos2, mushrooms2 = pizza.toppingsInCut((index+1, 0), (pizza.row, pizza.column))
-    return all(map(lambda i: i > pizza.L, [tomatos1, mushrooms1, tomatos2, mushrooms2]))
+    tomatos1, mushrooms1 = pizza.toppingsInSlice((0, 0), (pizza.row-1, index))
+    tomatos2, mushrooms2 = pizza.toppingsInSlice((0, index+1), (pizza.row-1, pizza.column-1))
+    return all(map(lambda i: i >= pizza.L, [tomatos1, mushrooms1, tomatos2, mushrooms2]))
+
+def cost(pizza, index):
+    T, M = pizza.toppingsInSlice((0,0), (pizza.row-1, pizza.column-1))
+    ratio = T/M
+    tomatos1, mushrooms1 = pizza.toppingsInSlice((0, 0), (pizza.row-1, index))
+    tomatos2, mushrooms2 = pizza.toppingsInSlice((0, index+1), (pizza.row-1, pizza.column-1))
+    print(T, M, ratio, tomatos1/mushrooms1, tomatos2/mushrooms2)
+    return abs(ratio - tomatos1/mushrooms1) + abs(ratio - tomatos2/mushrooms2)
