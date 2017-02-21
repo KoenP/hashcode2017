@@ -45,7 +45,7 @@ def parse(filename):
 
     layout = [[] for _ in range(rows)]
     for (i, line) in enumerate(lines[1:]):
-        layout[i] = list(line[:-1])
+        layout[i] = list(map(lambda x:x, line[:-1]))
 
     return Pizza(rows, columns, L, H, layout)
 
@@ -68,7 +68,7 @@ def slicesToOutput(slices):
     f.close()
 
 def growSlice(pizza, currentSlices):
-
+    pass
 
 def bigCuts(pizza):
     #We do only cuts according to the size H
