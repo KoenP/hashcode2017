@@ -61,7 +61,6 @@ def slicesToOutput(slices):
 def bigCuts(pizzas):
     #We do only cuts according to the size H
     cuts = []
-    return cuts
 
 # format slices: [((r_11,c_11), (r_12,c_12)), ((r_21,c_21), (r_22,c_22)), ...]
 def topDownSlicing(pizza):
@@ -69,7 +68,9 @@ def topDownSlicing(pizza):
         if sensible(pizza, i):
             pass
 
+<<<<<<< HEAD
 def sensible(pizza, index):
-    tomatos1, mushrooms1 = pizza.toppingsInCut((0, 0), (index, pizza.column))
-    tomatos2, mushrooms2 = pizza.toppingsInCut((index+1, 0), (pizza.row, pizza.column))
-    return all(map(lambda i: i > pizza.L, [tomatos1, mushrooms1, tomatos2, mushrooms2]))
+    pass
+=======
+    return cuts
+>>>>>>> 12b031e9896871a1001f31a41b3f6f537741f820
