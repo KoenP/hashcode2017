@@ -7,6 +7,22 @@ class Pizza:
         self.H = H
         self.grid = layout
 
+    def toppingsInCut(self, co1, co2):
+        tomatos = 0
+        mushrooms = 0
+        start_r = min(co1[0], co2[0])
+        start_c = min(co1[1], co2[1])
+        for r in range(abs(co1[0] - co2[0])):
+            curr_r = start_r + r
+            for c in range(abs(co1[1] - co2[1])):
+                curr_c = start_c + c
+                if self.grid[curr_r][curr_c] == "T":
+                    tomatos += 1
+                elif self.grid[curr_r][curr_c] == "M":
+                    mushrooms += 1
+
+        return (tomatos, mushrooms)
+
 # Returns a pizza
 def parse(filename):
     f = open(filename)
@@ -38,7 +54,5 @@ def slicesToOutput(slices):
     for s in slices:
         f.write("{} {} {} {}\n".format(s[0][0], s[0][1], s[1][0], s[1][1]))
     f.close()
-
-
 
 
