@@ -193,8 +193,8 @@ def topDownSlicing(pizza):
     layout1 = [line[:min_col[0]] for line in pizza.grid]
     layout2 = [line[min_col[0]+1:] for line in pizza.grid]
 
-    new_pizza1 = Pizza(pizza.row, min_col[0], pizza.L, pizza.H, layout1)
-    new_pizza2 = Pizza(pizza.row, pizza.column - min_col[0], pizza.L, pizza.H, layout2)
+    new_pizza1 = Pizza(pizza.row, min_col[0] + 1, pizza.L, pizza.H, layout1)
+    new_pizza2 = Pizza(pizza.row, pizza.column - (min_col[0] + 1), pizza.L, pizza.H, layout2)
 
     result1 = topDownSlicing(new_pizza1)
     result2 = topDownSlicing(new_pizza2)
@@ -204,6 +204,8 @@ def topDownSlicing(pizza):
     if transpose:
         result1 = list(map(detranspose, result1))
         result2 = list(map(detranspose, result2))
+
+    result2 = list(map(lambda x: ((x[0][0], x[0][1] + min_col[0] + 1), (x[1][0], x[1][1] + min_col[0] + 1)), result2))
 
     return result1 + result2
 
@@ -227,7 +229,7 @@ def cost(pizza, index):
 
 def main(argv):
     p = parse("input/" + argv[1])
-    slices = bigSlices(p)
+    slices = topDownSlicing(p)
     slicesToOutput(slices, argv[1])
     print(evaluateSlices(slices))
 
