@@ -68,7 +68,7 @@ def slicesToOutput(slices):
     f.close()
 
 def growSlice(pizza, currentSlices):
-
+    pass
 
 def bigCuts(pizza):
     #We do only cuts according to the size H
