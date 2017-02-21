@@ -79,8 +79,8 @@ def evaluateSlices(slices):
 # various algs
 
 # Encodes slices to output format (same format as above)
-def slicesToOutput(slices):
-    f = open('output.txt', 'w')
+def slicesToOutput(slices, filename):
+    f = open('output_{}.txt'.format(filename), 'w')
     f.write("{}\n".format(len(slices)))
 
     for s in slices:
@@ -89,8 +89,8 @@ def slicesToOutput(slices):
 
 def allSlicesForPosWithSize(pos, s):
     slices = []
-    horizontal = (pos, (pos[0],pos[1] + s))
-    vertical = (pos, (pos[0]+s, pos[1]))
+    horizontal = (pos, (pos[0],pos[1] + s - 1))
+    vertical = (pos, (pos[0]+s - 1, pos[1]))
     slices.append(horizontal)
     slices.append(vertical)
     start_r = pos[0]
@@ -182,11 +182,10 @@ def topDownSlicing(pizza):
 def sensible(pizza, index):
     pass
 
-
 def main(argv):
-    p = parse(argv[1])
+    p = parse("input/" + argv[1])
     slices = bigSlices(p)
-    slicesToOutput(slices)
+    slicesToOutput(slices, argv[1])
     print(evaluateSlices(slices))
 
 if __name__ == "__main__":
