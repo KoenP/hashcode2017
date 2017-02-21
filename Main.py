@@ -185,6 +185,7 @@ def topDownSlicing(pizza):
 
     if transpose:
         pizza.grid = transpose_grid(pizza.grid)
+        (pizza.row, pizza.column) = (pizza.column, pizza.row)
 
     sensibles = [(i, cost(pizza, i)) for i in range(pizza.column - 1) if sensible(pizza, i)]
     min_col = min(sensibles, key=lambda t: t[1])
