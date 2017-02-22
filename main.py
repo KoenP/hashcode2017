@@ -6,6 +6,7 @@ import alg2
 import alg3
 import alg4
 
+# Struct for wrapping all useful information in regards to the problem inputs
 class ProblemData:
     def __init__(self, filename):
         self.filename = filename
@@ -15,7 +16,7 @@ def parse(filename):
     with open(filename, mode="r") as ifs:
         lines = ifs.readlines()
 
-        # Do stuff with lines
+        # TODO: Do stuff with lines and add in ProblemData object
 
         # Return problem data
         return ProblemData(filename[6:])
