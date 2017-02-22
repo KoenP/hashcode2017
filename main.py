@@ -25,6 +25,8 @@ def output(filename, solution):
     # Cut off 'input/'
     with open('output_{}.txt'.format(filename[6:-3]), mode="w") as ofs:
         print("Outputting solution for {}...".format(filename[6:]))
+
+        # TODO: do useful writes
         ofs.write(filename)
 
 
