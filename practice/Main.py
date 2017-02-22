@@ -9,6 +9,8 @@ class Pizza:
         self.L = L
         self.H = H
         self.grid = layout
+        assert(self.row == len(self.grid))
+        assert(self.column == len(self.grid[0]))
 
     # co1 is coordinate 1
     # co2 is coordinate 2
@@ -173,10 +175,12 @@ def bigSlices(pizza):
     return cuts
 
 def isGoodSlice(pizza):
-    return pizza.row * pizza.column <= pizza.H
+    return pizza.row * pizza.column <= pizza.H and all(map(lambda i: i >= pizza.L, list(pizza.toppingsInSlice((0, 0), (pizza.row-1, pizza.column-1)))))
 
 # format slices: [((r_11,c_11), (r_12,c_12)), ((r_21,c_21), (r_22,c_22)), ...]
 def topDownSlicing(pizza):
+
+    old_pizza = pizza
 
     if isGoodSlice(pizza):
         return [((0,0), (pizza.row-1, pizza.column-1))]
@@ -188,9 +192,25 @@ def topDownSlicing(pizza):
         (pizza.row, pizza.column) = (pizza.column, pizza.row)
 
     sensibles = [(i, cost(pizza, i)) for i in range(pizza.column - 1) if sensible(pizza, i)]
+
+    if not sensibles:
+        while not isGoodSlice(pizza):
+            if pizza.row > pizza.column:
+                pizza.row -= 1
+                pizza.grid = pizza.grid[:-1]
+            else:
+                pizza.column -= 1
+                pizza.grid = [line[:-1] for line in pizza.grid]
+
+        if transpose:
+            return [((0,0), (pizza.column-1, pizza.row-1))]
+        else:
+            return [((0,0), (pizza.row-1, pizza.column-1))]
+
+
     min_col = min(sensibles, key=lambda t: t[1])
 
-    layout1 = [line[:min_col[0]] for line in pizza.grid]
+    layout1 = [line[:min_col[0]+1] for line in pizza.grid]
     layout2 = [line[min_col[0]+1:] for line in pizza.grid]
 
     new_pizza1 = Pizza(pizza.row, min_col[0] + 1, pizza.L, pizza.H, layout1)
@@ -201,11 +221,11 @@ def topDownSlicing(pizza):
 
     detranspose = lambda slice: ((slice[0][1], slice[0][0]), (slice[1][1], slice[1][0]))
 
+    result2 = list(map(lambda x: ((x[0][0], x[0][1] + min_col[0] + 1), (x[1][0], x[1][1] + min_col[0] + 1)), result2))
     if transpose:
         result1 = list(map(detranspose, result1))
         result2 = list(map(detranspose, result2))
 
-    result2 = list(map(lambda x: ((x[0][0], x[0][1] + min_col[0] + 1), (x[1][0], x[1][1] + min_col[0] + 1)), result2))
 
     return result1 + result2
 
