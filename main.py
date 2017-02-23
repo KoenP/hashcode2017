@@ -60,7 +60,7 @@ def output(filename, solution):
                 used_servers += 1
                 output += s.outputServer() + "\n"
 
-        ofs.write("{}\n {}".format(used_servers, output))
+        ofs.write("{}\n{}".format(used_servers, output))
 
 
 #def score(datastore_latency, ):
