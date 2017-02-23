@@ -37,8 +37,11 @@ def parse(filename):
             endpoint += 1
             line += K+1
 
-        
-
+        # Requests
+        def parseReqLine(line):
+            [v, e, r] = map(int, line.split())
+            return (v, e, r)
+        dictionary['Rqs'] = list(map(parseReqLine, lines[line:]))
 
         # Return problem data
         return dictionary
