@@ -23,9 +23,14 @@ def output(filename, solution):
     # Cut off 'input/'
     with open('output_{}.txt'.format(filename[6:-3]), mode="w") as ofs:
         print("Outputting solution for {}...".format(filename[6:]))
+        used_servers = 0
+        output = ""
+        for s in solution:
+            if s.current_cap > 0:
+                used_servers += 1
+                output += s.outputServer() + "\n"
 
-        # TODO: do useful writes
-        ofs.write(filename)
+        ofs.write("{}\n {}".format(used_servers, output))
 
 
 # Usage: python3 <algorithm> <inputfile OR 'all'>
