@@ -55,6 +55,9 @@ class Pizza:
 
         return False
 
+    def printGrid(self):
+        for g in self.grid:
+            print(g)
 # Returns a pizza
 def parse(filename):
     f = open(filename)
@@ -115,7 +118,9 @@ def growSlice(pizza, currentSlices):
     triedPos = []
     r = 0
     c = 0
+
     while r < pizza.row:
+        c = 0
         while c < pizza.column:
             slice = pizza.coordInSlices((r, c), currentSlices)
             if slice is None and (r,c) not in triedPos:
@@ -128,8 +133,6 @@ def growSlice(pizza, currentSlices):
                 c = max(co1[1], co2[1]) + 1
             else:
                 c += 1
-
-            print(r,c)
 
         if startCo is not None:
             break
@@ -155,7 +158,7 @@ def growSlice(pizza, currentSlices):
         (t,m) = pizza.toppingsInSlice(co1, co2)
 
         #Check if we have enough toppings
-        if not(t >= pizza.L and m >= pizza.L):
+        if t < pizza.L or m < pizza.L:
             continue
         if t+m > sum:
             sum = t+m
@@ -171,7 +174,6 @@ def bigSlices(pizza):
         if s is None:
             break
         cuts.append(s)
-        print(cuts)
     return cuts
 
 def isGoodSlice(pizza):
@@ -247,11 +249,31 @@ def cost(pizza, index):
     # print(T, M, ratio, tomatos1/mushrooms1, tomatos2/mushrooms2)
     return abs(ratio - tomatos1/mushrooms1) + abs(ratio - tomatos2/mushrooms2)
 
+def transpose_slices(slices):
+    new_slices = []
+    for s in slices:
+        print(s)
+        co1 = s[0]
+        co2 = s[1]
+        new_slices.append(((co1[1], co1[0]), (co2[1], co2[1])))
+    return new_slices
+
 def main(argv):
     p = parse("input/" + argv[1])
     slices = topDownSlicing(p)
     slicesToOutput(slices, argv[1])
     print(evaluateSlices(slices))
+    # p.grid = transpose_grid(p.grid)
+    # p.printGrid()
+    # old_c = p.column
+    # old_r = p.row
+    # p.row = old_c
+    # p.column = old_r
+    # slices = bigSlices(p)
+    # print(slices)
+    # slices = transpose_slices(slices)
+    # print(evaluateSlices(slices))
+    # slicesToOutput(slices, argv[1])
 
 if __name__ == "__main__":
    main(sys.argv)
