@@ -7,14 +7,12 @@ def exec_alg(data):
     requests = data['Rqs']
     temp_requests = []
     video_sizes = data['S']
-
     total_video_requests = [0] * data['V']
+
     for r in requests:
         # r[0] vid id
         # r[2] vid requests
         total_video_requests[r[0]] += r[2]
-    #cte = cacheToEndpointAssocList(data)
-    #rqd = endpointVideoToReqDict(data)
 
     for r in requests:
         # r[2] vid requests
@@ -64,8 +62,16 @@ def exec_alg(data):
 
             # Check if the video is in one of the cache servers of the endpoint
             in_servers = False
+            lowest_latency = 99999999999999999
+            lowest_server_id = 0
             for s in servers:
-                if r[0] in s.cached_videos:
+                l = s.latencies[current_endpoint]
+                if l < lowest_latency:
+                    lowest_latency = l
+                    lowest_server_id = s.id
+
+            for s in servers:
+                if r[0] in s.cached_videos and r[0] == lowest_server_id:
                     in_servers = True
                     break
 
