@@ -21,6 +21,32 @@ def getAvgLatencyEndpoint(ld, cache_servers):
 
     return latencies
 
+
+def getAvgWinCache(ld, endpoint_cache_servers, requests, cache_servers):
+    win = {}
+    for r in requests:
+        current_endpoint = r[1]
+
+        if current_endpoint in endpoint_cache_servers:
+            current_cache_servers = endpoint_cache_servers[current_endpoint]
+
+            for s in current_cache_servers:
+                c = cache_servers[s]
+                cur_latency = c.latencies[r[1]]
+                w = ld[r[1]] - cur_latency
+                if c.id not in win:
+                    win[c.id] = [0, 0]
+
+                win[c.id][0] += 1
+                win[c.id][1] += w * r[2]
+
+    avg_win = {}
+    for k,v in win.items():
+        avg_win[k] = win[k][1] / win[k][0]
+
+    return avg_win
+
+
 def exec_alg(data):
     print("Running algorithm 1 on {}...".format(data["filename"]))
     requests = data['Rqs']
@@ -35,7 +61,7 @@ def exec_alg(data):
 
     for r in requests:
         # r[2] vid requests
-        temp_requests.append((r[0], r[1], r[2], total_video_requests[r[0]] /video_sizes[r[1]]))
+        temp_requests.append((r[0], r[1], r[2], total_video_requests[r[0]] * r[2]/video_sizes[r[1]]))
 
     requests = temp_requests
     #Sort on weight
@@ -69,8 +95,8 @@ def exec_alg(data):
         cache_servers.append(CacheServer(c,data['X'],latencies[c]))
 
     ld = data['Ld']
-    avg_latencies = getAvgLatencyEndpoint(ld, cache_servers)
-
+    #avg_latencies = getAvgLatencyEndpoint(ld, cache_servers)
+    avg_win = getAvgWinCache(ld, endpoint_cache_servers, requests, cache_servers)
     for r in requests:
         current_endpoint = r[1]
         if current_endpoint in endpoint_cache_servers:
@@ -88,9 +114,8 @@ def exec_alg(data):
             #     if l < lowest_latency:
             #         lowest_latency = l
 
-
             for s in servers:
-                if r[0] in s.cached_videos and (ld[current_endpoint] - s.latencies[current_endpoint]) >= avg_latencies[current_endpoint]:
+                if r[0] in s.cached_videos and (ld[current_endpoint] - s.latencies[current_endpoint]) * r[2] >= avg_win[s.id]:
                     in_servers = True
                     break
 
