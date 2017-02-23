@@ -63,7 +63,8 @@ def output(filename, solution):
                     used_servers += 1
                     output += s.outputServer() + "\n"
 
-            ofs.write("{}\n {}".format(used_servers, output))
+            ofs.write("{}\n{}".format(used_servers, output))
+
         else:
             ofs.write("{}\n".format(len(solution)))
             for idx, s in enumerate(solution):

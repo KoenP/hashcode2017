@@ -4,6 +4,7 @@ class CacheServer:
         self.id = s_id
         self.max_cap = max_cap
         self.current_cap = 0
+        # latencies is a list
         self.latencies = latencies
         self.cached_videos = []
 
@@ -18,8 +19,6 @@ class CacheServer:
             self.current_cap += vid_size
             return True
         return False
-
-
 
     def outputServer(self):
         output = str(self.id)
