@@ -9,16 +9,19 @@ def exec_alg(params):
 def solve(params, cte, rqd):
     # TODO sorteer caches op latency
     allocation = [[] for _ in range(params['C'])]
-    for cacheId in range(params['C']):
+    for cacheId in sorted(range(params['C']), key=lambda cId: len(cte[cId])):
         ad = allocationsIndexedByVid(params, allocation)
         def ts(vid):
             tsaved = timeSaved2(params, cte, rqd, ad, cacheId, vid)
             size = params['S'][vid]
             return tsaved/size
-        sortedVids = sorted(range(params['V']), key=ts, reverse=True)
+        sortedVids = range(params['V'])
         cacheCapacity = params['X']
         curSize = 0
-        for v in sortedVids:
+        while sortedVids:
+            sortedVids = sorted(range(params['V']), key=ts, reverse=True)
+            v = sortedVids[0]
+            sortedVids = sortedVids[1:]
             vSize = params['S'][v]
             newSize = curSize + vSize
             if newSize <= cacheCapacity:
