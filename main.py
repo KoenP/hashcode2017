@@ -12,8 +12,33 @@ def parse(filename):
         lines = ifs.readlines()
         dictionary = {"filename": filename[6:]}
 
-        # TODO: Do stuff with lines and add in ProblemData object
-        # [var1, var2, ..., varN] = map(int, lines[0].split())
+        # Line 1 (VERCX)
+        [V, E, R, C, X] = map(int, lines[0].split())
+        dictionary['V'] = V
+        dictionary['E'] = E
+        dictionary['R'] = R
+        dictionary['C'] = C
+        dictionary['X'] = X
+
+        # Line 2 (video sizes)
+        dictionary['S']= list(map(int, lines[1].split()))
+
+        # Latencies
+        line = 2
+        endpoint = 0
+        dictionary['Ld'] = [0 for _ in range(E)]
+        dictionary['Lc'] = {}
+        while endpoint < E:
+            [L, K] = map(int, lines[line].split())
+            dictionary['Ld'][endpoint] = L
+            for j in range(K):
+                [cacheId, latency] = map(int, lines[line+j+1].split())
+                dictionary['Lc'][(endpoint,cacheId)] = latency
+            endpoint += 1
+            line += K+1
+
+        
+
 
         # Return problem data
         return dictionary
