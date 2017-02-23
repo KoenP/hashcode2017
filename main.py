@@ -6,21 +6,17 @@ import alg2
 import alg3
 import alg4
 
-# Struct for wrapping all useful information in regards to the problem inputs
-class ProblemData:
-    def __init__(self, filename):
-        self.filename = filename
-
 # Reads file with name filename and outputs dictionary
 def parse(filename):
     with open(filename, mode="r") as ifs:
         lines = ifs.readlines()
+        dictionary = {"filename": filename[6:]}
 
         # TODO: Do stuff with lines and add in ProblemData object
         # [var1, var2, ..., varN] = map(int, lines[0].split())
 
         # Return problem data
-        return ProblemData(filename[6:])
+        return dictionary
 
 # Output the solution
 def output(filename, solution):
