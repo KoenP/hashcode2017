@@ -61,6 +61,9 @@ def output(filename, solution):
         ofs.write("{}\n {}".format(used_servers, output))
 
 
+#def score(datastore_latency, ):
+#    pass
+
 # Usage: python3 <algorithm> <inputfile OR 'all'>
 if __name__ == "__main__":
     if len(sys.argv) == 3:
