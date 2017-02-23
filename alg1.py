@@ -2,6 +2,25 @@ from ClassFile import CacheServer
 from alg2 import timeSaved, cacheToEndpointAssocList, endpointVideoToReqDict
 import operator
 
+# Get the avg latency for one endpoint
+def getAvgLatencyEndpoint(ld, cache_servers):
+    avg_latencies = {}
+    for c in cache_servers:
+        for l,v in c.latencies.items():
+            if l not in avg_latencies:
+                # first item is how many latencies we got
+                # total amount of latency
+                avg_latencies[l] = [0, 0]
+
+            avg_latencies[l][0] += 1
+            avg_latencies[l][1] += ld[l] - v
+
+    latencies = {}
+    for k,v in avg_latencies.items():
+        latencies[k] = avg_latencies[k][1] / avg_latencies[k][0]
+
+    return latencies
+
 def exec_alg(data):
     print("Running algorithm 1 on {}...".format(data["filename"]))
     requests = data['Rqs']
@@ -16,7 +35,7 @@ def exec_alg(data):
 
     for r in requests:
         # r[2] vid requests
-        temp_requests.append((r[0], r[1], r[2], total_video_requests[r[0]] * r[2]/video_sizes[r[1]]))
+        temp_requests.append((r[0], r[1], r[2], total_video_requests[r[0]] /video_sizes[r[1]]))
 
     requests = temp_requests
     #Sort on weight
@@ -50,6 +69,7 @@ def exec_alg(data):
         cache_servers.append(CacheServer(c,data['X'],latencies[c]))
 
     ld = data['Ld']
+    avg_latencies = getAvgLatencyEndpoint(ld, cache_servers)
 
     for r in requests:
         current_endpoint = r[1]
@@ -62,16 +82,15 @@ def exec_alg(data):
 
             # Check if the video is in one of the cache servers of the endpoint
             in_servers = False
-            lowest_latency = 99999999999999999
-            lowest_server_id = 0
-            for s in servers:
-                l = s.latencies[current_endpoint]
-                if l < lowest_latency:
-                    lowest_latency = l
-                    lowest_server_id = s.id
+            # lowest_latency = float('inf')
+            # for s in servers:
+            #     l = s.latencies[current_endpoint]
+            #     if l < lowest_latency:
+            #         lowest_latency = l
+
 
             for s in servers:
-                if r[0] in s.cached_videos and r[0] == lowest_server_id:
+                if r[0] in s.cached_videos and (ld[current_endpoint] - s.latencies[current_endpoint]) >= avg_latencies[current_endpoint]:
                     in_servers = True
                     break
 
