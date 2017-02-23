@@ -6,6 +6,8 @@ import alg2
 import alg3
 import alg4
 
+from ClassFile import *
+
 # Reads file with name filename and outputs dictionary
 def parse(filename):
     with open(filename, mode="r") as ifs:
@@ -53,18 +55,19 @@ def output(filename, solution):
     # Cut off 'input/'
     with open('output_{}.txt'.format(filename[6:-3]), mode="w") as ofs:
         print("Outputting solution for {}...".format(filename[6:]))
-        used_servers = 0
-        output = ""
-        for s in solution:
-            if s.current_cap > 0:
-                used_servers += 1
-                output += s.outputServer() + "\n"
+        if solution and isinstance(solution[0], CacheServer):
+            used_servers = 0
+            output = ""
+            for s in solution:
+                if s.current_cap > 0:
+                    used_servers += 1
+                    output += s.outputServer() + "\n"
 
-        ofs.write("{}\n {}".format(used_servers, output))
-
-
-#def score(datastore_latency, ):
-#    pass
+            ofs.write("{}\n {}".format(used_servers, output))
+        else:
+            ofs.write("{}\n".format(len(solution)))
+            for idx, s in enumerate(solution):
+                ofs.write("{} {}\n".format(idx, " ".join(map(str, s))))
 
 # Usage: python3 <algorithm> <inputfile OR 'all'>
 if __name__ == "__main__":
