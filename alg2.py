@@ -7,10 +7,12 @@ def exec_alg(params):
     return solve(params, cte, rqd)
 
 def solve(params, cte, rqd):
+    # TODO sorteer caches op latency
     allocation = [[] for _ in range(params['C'])]
     for cacheId in range(params['C']):
+        ad = allocationsIndexedByVid(params, allocation)
         def ts(vid):
-            tsaved = timeSaved(params, cte, rqd, cacheId, vid)
+            tsaved = timeSaved2(params, cte, rqd, ad, cacheId, vid)
             size = params['S'][vid]
             return tsaved/size
         sortedVids = sorted(range(params['V']), key=ts, reverse=True)
@@ -37,6 +39,14 @@ def endpointVideoToReqDict(params):
         d[(e,v)] = r
     return d
 
+def allocationsIndexedByVid(params, allocations):
+    # TODO untested
+    d = [[] for _ in range(params['V'])]
+    for cacheId, vidList in enumerate(allocations):
+        for v in vidList:
+            d[v] += [cacheId]
+    return d
+
 def timeSaved(params, cte, rqd, cacheId, videoId):
     result = 0
     endpoints = cte[cacheId]
@@ -48,3 +58,20 @@ def timeSaved(params, cte, rqd, cacheId, videoId):
             result += (ld - lc) * reqs
     return result
 
+# TODO
+def timeSaved2(params, cte, rqd, allocationsIndexedByVid, cacheId, videoId):
+    result = 0
+    endpoints = cte[cacheId]
+    cachesAllocatedTo = allocationsIndexedByVid[videoId]
+    for e in endpoints:
+        reqs = rqd.get((e, videoId))
+        if reqs is not None:
+            latencyDict = params['Lc']
+            ld = params['Ld'][e]
+            lc = latencyDict[(e,cacheId)]
+            minCacheLatency = \
+                min(filter(lambda x: x is not None, \
+                           chain([ld], map(lambda c: latencyDict.get((e,c)), \
+                                           cachesAllocatedTo))))
+            result += max(0, minCacheLatency - lc) * reqs
+    return result
