@@ -1,16 +1,29 @@
 from recipes import *
 
 def exec_alg(params):
-    print("Running algorithm 2 on {}...".format(data["filename"]))
+    print("Running algorithm 2 on {}...".format(params["filename"]))
     cte = cacheToEndpointAssocList(params)
     rqd = endpointVideoToReqDict(params)
-    solve(params, cte, rqd)
-    return []
+    return solve(params, cte, rqd)
 
-#def solve(params, cte, rqd):
-#    allocation = [[] for _ in range(params['C'])]
-#    for cacheId in range(params['C']):
-#        sorted(range(params['V']), 
+def solve(params, cte, rqd):
+    allocation = [[] for _ in range(params['C'])]
+    for cacheId in range(params['C']):
+        def ts(vid):
+            tsaved = timeSaved(params, cte, rqd, cacheId, vid)
+            size = params['S'][vid]
+            return tsaved/size
+        sortedVids = sorted(range(params['V']), key=ts, reverse=True)
+        cacheCapacity = params['X']
+        curSize = 0
+        for v in sortedVids:
+            vSize = params['S'][v]
+            newSize = curSize + vSize
+            if newSize <= cacheCapacity:
+                allocation[cacheId] += [v]
+                curSize = newSize
+    return allocation
+
 
 def cacheToEndpointAssocList(params):
     al = [[] for _ in range(params['C'])]

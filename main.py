@@ -46,7 +46,7 @@ def parse(filename):
         # Return problem data
         return dictionary
 
-params = parse('input/example.in')
+params = parse('input/me_at_the_zoo.in')
 
 # Output the solution
 def output(filename, solution):
