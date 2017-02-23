@@ -22,8 +22,6 @@ def solve(params, cte, rqd):
         while sortedVids:
             v = sortedVids[0]
             sortedVids = sortedVids[1:]
-            if sortedVids:
-                sortedVids[:10] = sorted(sortedVids[:10], key=ts, reverse=True)
             vSize = params['S'][v]
             newSize = curSize + vSize
             if newSize <= cacheCapacity:
@@ -75,7 +73,7 @@ def timeSaved2(params, cte, rqd, allocationsIndexedByVid, cacheId, videoId):
             ld = params['Ld'][e]
             lc = latencyDict[(e,cacheId)]
             if cachesAllocatedTo:
-                lc *= 2
+                lc *= 3.5
             minCacheLatency = \
                 min(filter(lambda x: x is not None, \
                            chain([ld], map(lambda c: latencyDict.get((e,c)), \
