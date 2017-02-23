@@ -19,7 +19,7 @@ def solve(params, cte, rqd):
         cacheCapacity = params['X']
         curSize = 0
         while sortedVids:
-            sortedVids = sorted(range(params['V']), key=ts, reverse=True)
+            sortedVids = sorted(sortedVids, key=ts, reverse=True)
             v = sortedVids[0]
             sortedVids = sortedVids[1:]
             vSize = params['S'][v]
